@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "846209386379",
+    "firebase_url": "https://software-engineering-4c565.firebaseio.com",
+    "project_id": "software-engineering-4c565",
+    "storage_bucket": "software-engineering-4c565.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:846209386379:android:9d351f6dfcf40ad847518e",
+        "android_client_info": {
+          "package_name": "com.example.softwareengineering"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "846209386379-thcr62hheluagn3baus85v3bk6getgka.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.softwareengineering",
+            "certificate_hash": "5696bec0e954f25c2b26799a4ac76a9b51f47ca2"
+          }
+        },
+        {
+          "client_id": "846209386379-rd4hlbbcil0jbdh55v5tqh91r0bfmata.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCdSQf4wqWONFG6iVjvGwZHa6tE42xuw3U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "846209386379-rd4hlbbcil0jbdh55v5tqh91r0bfmata.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
