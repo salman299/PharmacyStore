@@ -1,14 +1,13 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:softwareengineering/screens/search.dart';
+import 'package:softwareengineering/custom_icons_icons.dart';
+
 
 import '../widgets/products_grid.dart';
-import '../widgets/badge.dart';
-import '../providers/cart.dart';
-import './cart_screen.dart';
-import '../widgets/app_drawer.dart';
+
 import '../providers/products.dart';
+import '../providers/userInfo.dart';
 import 'dart:async';
 
 enum FilterOptions {
@@ -20,6 +19,8 @@ enum FilterOptions {
 }
 
 class ProductsOverviewScreen extends StatefulWidget {
+  final isFavourite;
+  ProductsOverviewScreen({this.isFavourite});
   @override
   _ProductsOverviewScreenState createState() => _ProductsOverviewScreenState();
 }
@@ -27,12 +28,20 @@ class ProductsOverviewScreen extends StatefulWidget {
 class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
 
   var _showOnlyFavorites = false;
-  var selectedValue=FilterOptions.All;
+  var selectedValue=FilterOptions.SortByName;
+  var searchKeyWord="";
+  bool check=false;
   Future<bool> _selectCatagory(BuildContext context) async{
-    if (selectedValue == FilterOptions.Favorites || selectedValue==FilterOptions.All)
-      await Provider.of<Products>(context,listen: false).fetchAndSetProducts();
+    if (searchKeyWord.length>=3)
+      await Provider.of<Products>(context,listen: false).fetchAndSetProducts(searchKeyword: searchKeyWord);
+    // else if (selectedValue == FilterOptions.Favorites || selectedValue==FilterOptions.All)
+    //   await Provider.of<Products>(context,listen: false).fetchAndSetProducts();
     else if (selectedValue==FilterOptions.SortByName)
-      await Provider.of<Products>(context,listen: false).fetchAndSetProducts(sortType: "title");
+      {
+        await Provider.of<Products>(context,listen: false).fetchAndSetProducts(sortType: "title");
+        print("Heelo");
+        await Provider.of<UserInfo>(context,listen: false).fetchAndSetAddress();
+      }
     else if (selectedValue==FilterOptions.SortByPrice0_9)
       await Provider.of<Products>(context, listen: false).fetchAndSetProducts(sortType: "price", desc: false);
     else
@@ -41,139 +50,101 @@ class _ProductsOverviewScreenState extends State<ProductsOverviewScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text('Pharmacy',style: TextStyle(color: Theme.of(context).primaryColor),),
-        elevation: 0,
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu,color:  Color(0xFFFE7262),),
-              onPressed: () { Scaffold.of(context).openDrawer(); },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
-        ),
-
-        actions: <Widget>[
-//           Container(
-//             margin: EdgeInsets.symmetric(horizontal: 10,vertical: 5),
-//             //padding: EdgeInsets.all(5),
-//             decoration: BoxDecoration(
-//               borderRadius: BorderRadius.circular(10),
-//               color: Colors.white,
-//               boxShadow: [BoxShadow(
-//                 color: Colors.black.withOpacity(0.16),
-//                 offset: Offset(0,3),
-//                 blurRadius: 6,
-//               )]
-//             ),
-//             child:  Consumer<Cart>(
-//               builder: (_, cart, ch) =>
-//                   Badge(
-//                     color: Colors.white,
-//                     child: ch,
-//                     value: cart.itemCount.toString(),
-//                   ),
-//               child: IconButton(
-//                 icon: Icon(
-//                     Icons.add_shopping_cart,color: Theme.of(context).primaryColor
-//                 ),
-//                 onPressed: () {
-//                   Navigator.of(context).pushNamed(CartScreen.routeName);
-//                 },
-//               ),
-//             ),
-//
-// //            IconButton(
-// //              icon: Icon(Icons.add_shopping_cart,color: Theme.of(context).primaryColor,),
-// //              onPressed: (){
-// //                Navigator.of(context).pushNamed(Search.routeName);
-// //              },
-// //            ),
-//           ),
-
-//          PopupMenuButton(
-//            onSelected: (FilterOptions selectedValue) {
-//              print(selectedValue);
-//              setState(() {
-//                if (selectedValue == FilterOptions.Favorites)
-//                  _showOnlyFavorites = true;
-//                else if (selectedValue==FilterOptions.All)
-//                  _showOnlyFavorites = false;
-//                this.selectedValue=selectedValue;
-//              });
-//            },
-//            icon: Icon(
-//              Icons.more_vert,
-//            ),
-//            itemBuilder: (_) =>
-//            [
-//              PopupMenuItem(
-//                child: Text('Only Favorites'),
-//                value: FilterOptions.Favorites,
-//              ),
-//              PopupMenuItem(
-//                child: Text('Show All'),
-//                value: FilterOptions.All,
-//              ),
-//              PopupMenuItem(
-//                child: Text('Sort by Name'),
-//                value: FilterOptions.SortByName,
-//              ),
-//              PopupMenuItem(
-//                child: Text('Sort by Price (0-9)'),
-//                value: FilterOptions.SortByPrice0_9,
-//              ),
-//              PopupMenuItem(
-//                child: Text('Sort by Price (9-0)'),
-//                value: FilterOptions.SortByPrice9_0,
-//              ),
-//            ],
-//          ),
-        ],
-      ),
-
-      body: FutureBuilder(
-        future: _selectCatagory(context),
-        builder: (context, snap) =>
-        snap.connectionState == ConnectionState.waiting ? Center(
-          child: CircularProgressIndicator(),) : Column(
-          mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-//              Row(
-//                children: <Widget>[
-//                  Icon(Icons.search,)
-//                ],
-//              ),
-              Expanded(
-                child: ProductsGrid(
-                  _showOnlyFavorites),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      //mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.symmetric(horizontal: 15,vertical: 15),
+                decoration: BoxDecoration(
+                  color: Color(0xFFf6f5f5),
+                  borderRadius:  BorderRadius.circular(15),
+                ),
+                child: TextField(
+                  decoration: InputDecoration(
+                    contentPadding: EdgeInsets.only(left: 15, bottom: 11, top: 11, right: 15),
+                    prefixIcon: Icon(Icons.search,color: Colors.black.withOpacity(0.40),),
+                    border: InputBorder.none,
+                    focusedBorder: InputBorder.none,
+                    enabledBorder: InputBorder.none,
+                    errorBorder: InputBorder.none,
+                    disabledBorder: InputBorder.none,
+                    //filled: true,
+                    //fillColor: Color(0xFFf6f5f5),
+                  ),
+                  onChanged: (val){
+                    if (val.length>=3)
+                      setState(() {
+                        searchKeyWord=val;
+                        check=true;
+                      });
+                    else if(val.length==2 && check==true){
+                      setState(() {
+                        searchKeyWord=val;
+                        check=false;
+                      });
+                    }
+                  },
+                ),
               ),
-            ],
-          ),
-      ),
-//      floatingActionButton: FloatingActionButton(
-//        backgroundColor: Theme.of(context).primaryColor,
-//        child:
-//
-//        Consumer<Cart>(
-//            builder: (_, cart, ch) =>
-//                Badge(
-//                  child: ch,
-//                  value: cart.itemCount.toString(),
-//                ),
-//            child: IconButton(
-//              icon: Icon(
-//                Icons.shopping_cart,
-//              ),
-//              onPressed: () {
-//                Navigator.of(context).pushNamed(CartScreen.routeName);
-//              },
-//            ),
-//          ),
-//      ),
-      drawer: AppDrawer(),);
+            ),
+            PopupMenuButton(
+           onSelected: (FilterOptions selectedValue) {
+             print(selectedValue);
+             setState(() {
+               // if (selectedValue == FilterOptions.Favorites)
+               //   _showOnlyFavorites = true;
+               // else if (selectedValue==FilterOptions.All)
+               //   _showOnlyFavorites = false;
+               this.selectedValue=selectedValue;
+             });
+           },
+           icon: Icon(CustomIcons.filter,color: Colors.black.withOpacity(0.5),),
+           itemBuilder: (_) =>
+           [
+             // PopupMenuItem(
+             //   child: Text('Only Favorites'),
+             //   value: FilterOptions.Favorites,
+             // ),
+             // PopupMenuItem(
+             //   child: Text('Show All'),
+             //   value: FilterOptions.All,
+             // ),
+             PopupMenuItem(
+               child: Text('Sort by Name'),
+               value: FilterOptions.SortByName,
+             ),
+             PopupMenuItem(
+               child: Text('Sort by Price (0-9)'),
+               value: FilterOptions.SortByPrice0_9,
+             ),
+             PopupMenuItem(
+               child: Text('Sort by Price (9-0)'),
+               value: FilterOptions.SortByPrice9_0,
+             ),
+           ],
+         ),
+            // Padding(
+            //   padding: EdgeInsets.only(right: 15),
+            //     child: GestureDetector(onTap: (){}, child: Icon(CustomIcons.filter,color: Colors.black.withOpacity(0.5),),)
+            // )
+          ],
+        ),
+        FutureBuilder(
+          future: _selectCatagory(context),
+          builder: (context, snap) =>
+          snap.connectionState == ConnectionState.waiting ? Center(
+            child: CircularProgressIndicator(),) : Expanded(
+              child: ProductsGrid(
+                  widget.isFavourite),
+            ),
+        ),
+      ],
+    );
   }
 }

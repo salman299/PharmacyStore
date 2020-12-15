@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:softwareengineering/providers/global_variables.dart';
 import 'package:softwareengineering/providers/userInfo.dart';
+import 'package:softwareengineering/screens/add_address_screen.dart';
+import 'package:softwareengineering/screens/address_screen.dart';
 import 'package:softwareengineering/screens/auth_screen.dart';
+import 'package:softwareengineering/screens/checkout_screen.dart';
+import 'package:softwareengineering/screens/main_navigation_screen.dart';
 import 'package:softwareengineering/screens/search.dart';
 import './screens/auth_screen1.dart';
 import './providers/auth.dart';
@@ -12,7 +17,7 @@ import './screens/order_screen.dart';
 import './screens/user_product_screen.dart';
 
 import './screens/cart_screen.dart';
-import './screens/products_overview_screen.dart';
+
 import './screens/product_detail_screen.dart';
 import './providers/cart.dart';
 import './providers/order.dart';
@@ -26,7 +31,13 @@ class MyApp extends StatelessWidget {
     return MultiProvider(
         providers: [
           ChangeNotifierProvider.value(
+            value: GlobalVariables(),
+          ),
+          ChangeNotifierProvider.value(
             value: Auth(),
+          ),
+          ChangeNotifierProxyProvider<Auth,UserInfo>(
+            update: (ctx,auth,previousUserInfo) =>UserInfo(auth.userId,previousUserInfo==null? []: previousUserInfo.address),
           ),
           ChangeNotifierProxyProvider<Auth, Products>(
             update: (ctx, auth, previousProduct) => Products(
@@ -34,10 +45,6 @@ class MyApp extends StatelessWidget {
                 auth.userId,
                 previousProduct == null ? [] : previousProduct.items),
           ),
-          ChangeNotifierProxyProvider<Auth, UserInfo>(
-            update: (ctx, auth, previousProduct) => UserInfo(
-              auth.userId,
-            )),
           ChangeNotifierProvider.value(
             value: Cart(),
           ),
@@ -49,8 +56,10 @@ class MyApp extends StatelessWidget {
         child: Consumer<Auth>(
           builder: (ctx, auth, child) {
             return MaterialApp(
+                debugShowCheckedModeBanner: false,
                 title: 'MyShop',
                 theme: ThemeData(
+                  cursorColor: Color(0xFFE93354),
                   primaryColor: Color(0xFFFE7262),
                   iconTheme:  IconThemeData(color: Color(0xFFFE7262)),
                   backgroundColor: Colors.white,
@@ -61,7 +70,7 @@ class MyApp extends StatelessWidget {
                       borderRadius: BorderRadius.circular(5),
                       borderSide: BorderSide(
                         width: 0.5,
-                        color: Color(0xFFFE7262).withOpacity(0.30),
+                        color: Color(0xFF191C3D).withOpacity(0.30),
                       ),
                     ),
                     focusedBorder: OutlineInputBorder(
@@ -101,7 +110,7 @@ class MyApp extends StatelessWidget {
 //                  fontFamily: 'Lato',
 //
 //                ),
-                home: auth.isAuth ? ProductsOverviewScreen(): FutureBuilder(
+                home: auth.isAuth ? MainNavigationScreen(): FutureBuilder(
                   future: auth.getCurrentUser(),
                   builder: (ctx, snap) => snap.connectionState ==
                           ConnectionState.waiting
@@ -115,7 +124,10 @@ class MyApp extends StatelessWidget {
                   OrderScreen.routeName: (ctx) => OrderScreen(),
                   UserProductScreen.routeName: (ctx) => UserProductScreen(),
                   EditProduct.routeName: (ctx) => EditProduct(),
+                  AddressScreen.routeName: (ctx)=> AddressScreen(),
                   Search.routeName: (ctx)=> Search(),
+                  AddAddressScreen.routeName: (ctx)=>AddAddressScreen(),
+                  CheckOutScreen.routeName : (ctx)=>CheckOutScreen(),
                 });
           },
         ));

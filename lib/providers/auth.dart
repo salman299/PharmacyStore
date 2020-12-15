@@ -6,6 +6,7 @@ class Auth with ChangeNotifier {
   String _token;
   String _udi;
   DateTime _expiryDate;
+  String _userId;
 
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
@@ -17,6 +18,10 @@ class Auth with ChangeNotifier {
 
   String get userId {
     return _udi;
+  }
+
+  String get userActualId {
+    return _userId;
   }
 
   String get token {
@@ -35,9 +40,11 @@ class Auth with ChangeNotifier {
         {
           FirebaseUser user = result.user;
           final idToken = await user.getIdToken();
+
           _token = idToken.token;
           _expiryDate = idToken.expirationTime;
           _udi = user.uid;
+          _userId= user.email;
           notifyListeners();
           return true;
         }
@@ -63,6 +70,7 @@ class Auth with ChangeNotifier {
         return false;
       }
       _udi = user.uid;
+      _userId= user.email;
       final idToken = await user.getIdToken();
       _token = idToken.token;
       _expiryDate = idToken.expirationTime;

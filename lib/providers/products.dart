@@ -1,10 +1,8 @@
 import 'dart:core';
 import 'package:flutter/material.dart';
-import '../module/http_exceptions.dart';
 import './product.dart';
 import 'dart:async';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -61,13 +59,20 @@ class Products with ChangeNotifier {
     return _items.where((prodItem) => prodItem.isFavorite).toList();
   }
 
-  Future<void> fetchAndSetProducts({String sortType="title", desc=false ,bool filterByUser = false}) async {
+  Future<void> fetchAndSetProducts({String sortType="title", desc=false ,bool filterByUser = false,String searchKeyword=""}) async {
     //final diffProducts=filterByUser ? 'orderBy="creatorId"&equalTo="$_userId"': '';
-    print("Title $sortType");
     try{
-      final exData=await Firestore.instance.collection("products").orderBy(sortType,descending: desc).getDocuments();
+      var exData;
+      if (searchKeyword=="")
+        exData=await Firestore.instance.collection("products").orderBy(sortType,descending: desc).getDocuments();
+      else {
+        exData = await Firestore.instance.collection("products").where(
+            "title",isGreaterThanOrEqualTo:searchKeyword).getDocuments();
+        print(exData);
+      }
       if (exData==null)
         return;
+
       final exFavoriteData = await Firestore.instance.collection("userFravourite").document(_userId).get();
 
       final List<Product> loadedProducts = [];

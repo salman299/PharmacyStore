@@ -173,21 +173,21 @@ class AppDrawer extends StatelessWidget {
                   Navigator.of(context).pushReplacementNamed(UserProductScreen.routeName);
                 },
               ),
-              // ListTile(
-              //   contentPadding: EdgeInsets.zero,
-              //   leading: Icon(
-              //     Icons.payment,
-              //     color: Theme.of(context).primaryColor,
-              //     size: dSize.height*0.030,
-              //   ),
-              //   title: Text(
-              //     'Order',
-              //     style: _style,
-              //   ),
-              //   onTap: (){
-              //     Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
-              //   },
-              // ),
+              ListTile(
+                contentPadding: EdgeInsets.zero,
+                leading: Icon(
+                  Icons.payment,
+                  color: Theme.of(context).primaryColor,
+                  size: dSize.height*0.030,
+                ),
+                title: Text(
+                  'Order',
+                  style: _style,
+                ),
+                onTap: (){
+                  Navigator.of(context).pushReplacementNamed(OrderScreen.routeName);
+                },
+              ),
               // ListTile(
               //   onTap: (){
               //     //Navigator.of(context).pushReplacementNamed(SettingScreen.routeName);

@@ -5,12 +5,14 @@ class CartItem {
   final String title;
   final int quantity;
   final double price;
+  final String image;
 
   CartItem({
     @required this.id,
     @required this.title,
     @required this.quantity,
     @required this.price,
+    @required this.image,
   });
 }
 
@@ -25,6 +27,12 @@ class Cart with ChangeNotifier {
     return _items.length;
   }
 
+  int itemQuantity(String productId){
+      if (_items.containsKey(productId)) {
+        return _items[productId].quantity;
+      }
+     return 0;
+  }
   double get totalAmount {
     var total = 0.0;
     _items.forEach((key, cartItem) {
@@ -33,7 +41,7 @@ class Cart with ChangeNotifier {
     return total;
   }
 
-  void addItem(String productId, double price, String title) {
+  void addItem(String productId, double price, String title,String image) {
     if (_items.containsKey(productId)) {
       // change quantity...
       _items.update(
@@ -43,6 +51,7 @@ class Cart with ChangeNotifier {
               title: existingCartItem.title,
               price: existingCartItem.price,
               quantity: existingCartItem.quantity + 1,
+              image: existingCartItem.image
             ),
       );
     } else {
@@ -53,15 +62,17 @@ class Cart with ChangeNotifier {
               title: title,
               price: price,
               quantity: 1,
+              image: image
             ),
       );
     }
     notifyListeners();
   }
+
   void removeSingleItem(String productId) {
     if (!_items.containsKey(productId))
         return;
-    if(_items[productId].quantity<1)
+    if(_items[productId].quantity==1)
       _items.remove(productId);
     else
       {
@@ -71,11 +82,13 @@ class Cart with ChangeNotifier {
             id: existingCartItem.id,
             title: existingCartItem.title,
             price: existingCartItem.price,
+            image: existingCartItem.image,
             quantity: existingCartItem.quantity - 1,
           ),
         );
 
       }
+    notifyListeners();
   }
 
   void removeItem(String productId) {

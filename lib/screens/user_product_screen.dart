@@ -18,18 +18,19 @@ class UserProductScreen extends StatelessWidget {
    // final productData = Provider.of<Products>(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Products',style: TextStyle(fontWeight: FontWeight.w500,color: Theme.of(context).primaryColor),),
-        leading: Builder(
-          builder: (BuildContext context) {
-            return IconButton(
-              icon: const Icon(Icons.menu,color:  Color(0xFFFE7262),),
-              onPressed: () { Scaffold.of(context).openDrawer(); },
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-            );
-          },
+        elevation: 1,
+        backgroundColor: Color(0xFFf6f5f5),
+        leading: IconButton(
+          onPressed: () => Navigator.of(context).pop(),
+          icon: Icon(
+            Icons.arrow_back_ios,
+            color: Theme.of(context).primaryColor,
+            size: 18,
+          ),
         ),
-        backgroundColor: Colors.white,
-        elevation: 0,
+        title: Text("My Products",style: TextStyle(
+            color: Colors.black,
+            fontWeight: FontWeight.w500),),
       ),
       floatingActionButton: FloatingActionButton(
         child: Icon(Icons.add,color: Colors.white,),

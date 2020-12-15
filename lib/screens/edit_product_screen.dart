@@ -124,9 +124,9 @@ class _EditProductState extends State<EditProduct> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text('Edit Products',style: TextStyle(fontWeight: FontWeight.w500,color: Theme.of(context).primaryColor),),
-        elevation: 0,
-        backgroundColor: Colors.white,
+        title: Text('Edit Products',style: TextStyle(fontWeight: FontWeight.w500),),
+        elevation: 1,
+        backgroundColor: Color(0xFFf6f5f5),
         leading: IconButton(
           onPressed: ()=>Navigator.of(context).pop(),
           icon: Icon(Icons.arrow_back_ios,color:  Color(0xFFFE7262),size: 18,),

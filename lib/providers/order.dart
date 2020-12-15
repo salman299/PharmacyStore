@@ -51,7 +51,6 @@ class Order with ChangeNotifier {
                 .toList()));
       });
       _items=loadedOrder.reversed.toList();
-      print(_items);
       notifyListeners();
     }catch (error){
       throw (error);

@@ -1,6 +1,4 @@
 import 'package:flutter/foundation.dart';
-import 'package:http/http.dart' as http;
-import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 class Product with ChangeNotifier {
   final String id;
@@ -24,7 +22,8 @@ class Product with ChangeNotifier {
     isFavorite = !isFavorite;
     notifyListeners();
     try{
-      await Firestore.instance.collection("userFravourite").document(userId).updateData({"$id": isFavorite});
+      //Firestore.instance.collection("userFravourite").document(userId).setData(data)
+      await Firestore.instance.collection("userFravourite").document(userId).setData({"$id": isFavorite});
     }catch (error){
       isFavorite=localFav;
       notifyListeners();

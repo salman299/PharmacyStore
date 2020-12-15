@@ -1,8 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:softwareengineering/screens/edit_product_screen.dart';
-import '../providers/cart.dart';
+import 'package:softwareengineering/custom_icons_icons.dart';
+import 'package:softwareengineering/providers/auth.dart';
+import 'package:softwareengineering/providers/product.dart';
+
 import '../providers/products.dart';
 
 class ProductDetailScreen extends StatefulWidget {
@@ -17,24 +19,58 @@ class ProductDetailScreen extends StatefulWidget {
 }
 
 class _ProductDetailScreenState extends State<ProductDetailScreen> {
+  bool firstTime=true;
+  Product loadedProduct;
+  String token;
+  String userId;
+  bool isFavourite=false;
+  @override
+  void setState(fn) {
+    // TODO: implement setState
+
+    super.setState(fn);
+  }
   @override
   Widget build(BuildContext context) {
-    final productId =
-        ModalRoute.of(context).settings.arguments as String; // is the id!
-    final loadedProduct = Provider.of<Products>(
-      context,
-      listen: false,
-    ).findById(productId);
-    final cart = Provider.of<Cart>(context, listen: false);
+    if (firstTime){
+      final productId = ModalRoute.of(context).settings.arguments as String; // is the id!
+      loadedProduct = Provider.of<Products>(
+        context,
+        listen: false,
+      ).findById(productId);
+      //final cart = Provider.of<Cart>(context, listen: false);
+      token= Provider.of<Auth>(context,listen: false).token;
+      userId= Provider.of<Auth>(context,listen: false).userId;
+      setState(() {
+        firstTime=false;
+        isFavourite=loadedProduct.isFavorite;
+      });
+    }
     return Scaffold(
       appBar: AppBar(
         title: Text(loadedProduct.title,style: TextStyle(fontWeight: FontWeight.w500,color: Theme.of(context).primaryColor),),
-        elevation: 0,
-        backgroundColor: Colors.white,
+        elevation: 1,
+        backgroundColor: Color(0xFFf6f5f5),
         leading: IconButton(
           onPressed: ()=>Navigator.of(context).pop(),
           icon: Icon(Icons.arrow_back_ios,color:  Color(0xFFFE7262),size: 18,),
         ),
+        actions: [
+          IconButton(
+              icon: Icon(
+                loadedProduct.isFavorite ? CustomIcons.heart__1_ : CustomIcons.heart,
+              color: Colors.red,
+              ),
+
+              onPressed: () {
+                setState(() {
+                  loadedProduct.toggleFavoriteStatus(token,userId);
+                  isFavourite=!isFavourite;
+                });
+
+              },
+            ),
+        ],
       ),
       // floatingActionButton:
       //     Builder(

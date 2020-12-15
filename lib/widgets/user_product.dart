@@ -38,7 +38,29 @@ class UserProduct extends StatelessWidget {
                 icon: Icon(Icons.delete, color: Theme.of(context).errorColor),
                 onPressed: () async {
                   try{
-                    await Provider.of<Products>(context).deleteProduct(id);
+                    final result=await showDialog(
+                      context: context,
+                      builder: (ctx) => AlertDialog(
+                        title: Text('Are You Sure!'),
+                        content: Text('Do you want to delete product from your list'),
+                        actions: <Widget>[
+                          FlatButton(
+                            child: Text('Yes',style: TextStyle(color: Theme.of(context).primaryColor),),
+                            onPressed: () {
+                              Navigator.of(ctx).pop(true);
+                            },
+                          ),
+                          FlatButton(
+                            child: Text('No',style: TextStyle(color: Theme.of(context).primaryColor)),
+                            onPressed: () {
+                              Navigator.of(ctx).pop(false);
+                            },
+                          ),
+                        ],
+                      ),
+                    );
+                    if (result)
+                      await Provider.of<Products>(context).deleteProduct(id);
                   } catch (error){
                     scaffold.showSnackBar(SnackBar(content: Text('Not deleted!'),));
                   }
