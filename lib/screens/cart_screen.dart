@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:softwareengineering/providers/global_variables.dart';
@@ -20,15 +21,19 @@ class _CartScreenState extends State<CartScreen> {
     final cart = Provider.of<Cart>(context);
     return Provider.of<GlobalVariables>(context).isCheckout ? CheckOutScreen() :Stack(
         children: <Widget>[
-          ListView.builder(
-            itemCount: cart.items.length,
-            itemBuilder: (ctx, i) => CartItem(
-              id: cart.items.values.toList()[i].id,
-              productId: cart.items.keys.toList()[i],
-              price: cart.items.values.toList()[i].price,
-              quantity: cart.items.values.toList()[i].quantity,
-              title: cart.items.values.toList()[i].title,
-              image: cart.items.values.toList()[i].image,
+          Padding(
+            padding: EdgeInsets.only(bottom: 60),
+            child: ListView.builder(
+              padding: EdgeInsets.only(bottom: 20),
+              itemCount: cart.items.length,
+              itemBuilder: (ctx, i) => CartItem(
+                id: cart.items.values.toList()[i].id,
+                productId: cart.items.keys.toList()[i],
+                price: cart.items.values.toList()[i].price,
+                quantity: cart.items.values.toList()[i].quantity,
+                title: cart.items.values.toList()[i].title,
+                image: cart.items.values.toList()[i].image,
+              ),
             ),
           ),
           Positioned(

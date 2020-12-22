@@ -23,7 +23,7 @@ class Product with ChangeNotifier {
     notifyListeners();
     try{
       //Firestore.instance.collection("userFravourite").document(userId).setData(data)
-      await Firestore.instance.collection("userFravourite").document(userId).setData({"$id": isFavorite});
+      await Firestore.instance.collection("userFravourite").document(userId).updateData({"$id": isFavorite});
     }catch (error){
       isFavorite=localFav;
       notifyListeners();

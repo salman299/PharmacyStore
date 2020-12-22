@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:softwareengineering/providers/global_variables.dart';
 import 'package:softwareengineering/providers/userInfo.dart';
 import 'package:softwareengineering/screens/address_screen.dart';
-
+import '../widgets/confirmation_cart.dart';
 import '../providers/cart.dart';
 import '../providers/order.dart';
 class CheckOutScreen extends StatelessWidget {
@@ -165,7 +165,7 @@ class _OrderButtonState extends State<OrderButton> {
           borderRadius: BorderRadius.circular(30),
           color: Colors.greenAccent,
         ),
-        child: Text("Slide To Order", style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
+        child: Text("Confirm Order", style: TextStyle(color: Colors.white,fontWeight: FontWeight.w500),),
       ),
       confirmDismiss: (direction) async {
         setState(() {
@@ -181,6 +181,14 @@ class _OrderButtonState extends State<OrderButton> {
         });
         widget.cart.clear();
         Provider.of<GlobalVariables>(context,listen:false).changeCheckout();
+        showDialog(
+            context: context,
+            builder: (context) => ConfirmationCart(
+              title: "CONGRATULATIONS",
+              description: "Your Order has been Places Successfully",
+              buttonText: "Oky",
+            )
+        );
         return true;
       },
       child: ClipRRect(

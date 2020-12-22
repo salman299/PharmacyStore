@@ -30,6 +30,7 @@ class _AuthCardState extends State<AuthCard>{
       content: Text(message),
       actions: <Widget>[
         FlatButton(
+          color: Theme.of(context).primaryColor.withOpacity(0.50),
           child: Text("okay"),
           onPressed: ()=> Navigator.of(context).pop(),
         )
@@ -134,7 +135,7 @@ class _AuthCardState extends State<AuthCard>{
                 Text("Welcome", style: TextStyle(fontWeight: FontWeight.w600,fontSize: dSize.height*0.03),),
                 SizedBox(
                   width: dSize.width*0.60,
-                    child: Text(widget.isLogin? "Sign in to add your place to get it through out the world": "Sign Up to Experience great features of this App", maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w300,fontSize: dSize.height*0.02),)),
+                    child: Text(widget.isLogin? "Sign in to order Medicines to your Door Steps": "Sign Up to be our Royal Customer", maxLines: 2,textAlign: TextAlign.center,style: TextStyle(fontWeight: FontWeight.w300,fontSize: dSize.height*0.02),)),
                 SizedBox(
                   height: dSize.height * 0.04,
                 ),
