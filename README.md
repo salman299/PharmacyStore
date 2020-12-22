@@ -1,4 +1,4 @@
-# softwareengineering
+# HCI Project
 
 A new Flutter application.
 
